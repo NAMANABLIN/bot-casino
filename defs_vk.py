@@ -15,3 +15,11 @@ async def start(msg: Message):
         await msg.answer('Привет')
     except IntegrityError:
         await msg.answer('Ты уже зарегестрирован')
+
+
+@bot.on.private_message(text=['Инфо', 'Инфо <id>'])
+async def info(msg: Message, id: int = None):
+    if id is None:
+        await msg.answer(await get_all('*'))
+    else:
+        await msg.answer(await get(id, '*'))
