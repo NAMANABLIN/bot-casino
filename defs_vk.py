@@ -1,10 +1,7 @@
 from config import VK_TOKEN
-from defs_sql import update, updates, get, get_all, create
 from aiosqlite import IntegrityError
 from vkbottle.bot import Bot, Message
-
-import sys
-
+from defs_sql import update, updates, get, get_all, create
 bot = Bot(token=VK_TOKEN)
 
 
@@ -14,7 +11,7 @@ async def start(msg: Message):
         await create(msg.peer_id)
         await msg.answer('Привет')
     except IntegrityError:
-        await msg.answer('Ты уже зарегестрирован')
+        await msg.answer('Ты уже зарегистрирован')
 
 
 @bot.on.private_message(text=['Инфо', 'Инфо <id>'])
