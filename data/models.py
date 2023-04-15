@@ -35,7 +35,6 @@ class User(Base, ModelAdmin):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
-    nickname = Column(String)
     money = Column(Integer, default=0)
     promocodes = Column(String, default="")
 
@@ -45,7 +44,6 @@ class User(Base, ModelAdmin):
         return (
             f"<{self.__class__.__name__}("
             f"id={self.id}, "
-            f"nickname={self.nickname}, "
             f"money={self.money},"
             f"promocodes = {self.promocodes}"
             f")>"

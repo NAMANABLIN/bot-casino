@@ -9,14 +9,14 @@ async def init_app():
     await async_db_session.init()
 
 
-async def create_user(id, nickname):
-    await User.create(id=id, nickname=nickname)
+async def create_user(id):
+    await User.create(id=id)
     user = await User.get(id)
     return user.id
 
 
-async def update_user(id, money=None, promocodes=None, nickname=None):
-    await User.update(id, nickname=nickname)
+async def update_user(id, money=None, promocodes=None):
+    await User.update(id)
     user = await User.get(id)
     return user.nickname
 
