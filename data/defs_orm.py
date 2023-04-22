@@ -9,16 +9,16 @@ async def init_app():
     await async_db_session.init()
 
 
-async def create_user(id):
-    await User.create(id=id)
+async def create_user(id, **kwargs):
+    await User.create(id=id, **kwargs)
     user = await User.get(id)
     return user.id
 
 
-async def update_user(id, money=None, promocodes=None):
-    await User.update(id)
+async def update_user(id, **kwargs):
+    await User.update(id,**kwargs)
     user = await User.get(id)
-    return user.nickname
+    return user.id
 
 
 async def get_user(id=None):
@@ -26,7 +26,7 @@ async def get_user(id=None):
         info = await User.get(id)
         return info
     except exc.NoResultFound:
-        return "Пользователь не зарегистрирован"
+        return False
 
 
 loop = asyncio.get_event_loop()

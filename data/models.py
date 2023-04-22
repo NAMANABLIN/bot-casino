@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy import update as sqlalchemy_update
 from sqlalchemy.future import select
 
@@ -35,8 +35,10 @@ class User(Base, ModelAdmin):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
+    nickname = Column(String, primary_key=True)
     money = Column(Integer, default=0)
     promocodes = Column(String, default="")
+    sex = Column(Boolean, default=True, )
 
     __mapper_args__ = {"eager_defaults": True}
 
@@ -44,7 +46,9 @@ class User(Base, ModelAdmin):
         return (
             f"<{self.__class__.__name__}("
             f"id={self.id}, "
-            f"money={self.money},"
-            f"promocodes = {self.promocodes}"
+            f"nickname={self.nickname}, "
+            f"money={self.money}, "
+            f"promocodes = {self.promocodes}, "
+            f"sex={self.sex}"
             f")>"
         )

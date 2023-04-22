@@ -22,7 +22,7 @@ class AsyncDatabaseSession:
         )
 
         self._session = sessionmaker(
-            self._engine, expire_on_commit=False, class_=AsyncSession
+            self._engine, expire_on_commit=True, class_=AsyncSession
         )()
 
     async def create_all(self):
