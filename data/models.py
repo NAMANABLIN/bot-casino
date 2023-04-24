@@ -38,7 +38,8 @@ class User(Base, ModelAdmin):
     nickname = Column(String, primary_key=True)
     money = Column(Integer, default=0)
     promocodes = Column(String, default="")
-    sex = Column(Boolean, default=True, )
+    sex = Column(Boolean, default=True)
+    iswork = Column(Boolean, default=False)
 
     __mapper_args__ = {"eager_defaults": True}
 
@@ -50,5 +51,6 @@ class User(Base, ModelAdmin):
             f"money={self.money}, "
             f"promocodes = {self.promocodes}, "
             f"sex={self.sex}"
+            f"iswork={self.iswork}"
             f")>"
         )
