@@ -32,7 +32,6 @@ async def awkward_handler(msg: Message):
 @bp.on.private_message(state=RegState.SEX)
 async def awkward_handler(msg: Message):
     message_text = msg.text
-    print(5)
     if message_text == 'Мужской' or message_text == 'Женский':
         await create_user(msg.peer_id, nickname=ctx.get('name'), sex=sex2bool[message_text])
         return 'Регистрация прошла успешно!'
