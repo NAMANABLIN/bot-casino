@@ -4,7 +4,8 @@ from data.defs_orm import get_user, update_user
 from sqlalchemy.exc import IntegrityError
 
 from config import even_bets, odd_bets, \
-    zero_bets, all_bets, reformat_money
+    zero_bets, all_bets
+from helper_funcs import reformat_money
 from random import randint
 
 bp = Blueprint("For games commands")

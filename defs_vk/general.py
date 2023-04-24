@@ -1,7 +1,7 @@
 from vkbottle.bot import Blueprint, Message
 from data.defs_orm import get_user, update_user
 
-from config import reformat_money, link_handler
+from helper_funcs import reformat_money, link_handler
 from sqlalchemy.exc import IntegrityError
 
 bp = Blueprint("For games commands")
