@@ -57,7 +57,7 @@ async def transfer(msg: Message, url: str, money2transfer: str):
             if user.money >= money2transfer:
                 await update_user(id=msg.from_id,
                                   money=user.money - money2transfer)
-                await update_user(id=msg.from_id,
+                await update_user(id=user2pass.id,
                                   money=user2pass.money + money2transfer)
                 await msg.answer('Перевод совершён')
             else:
