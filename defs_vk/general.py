@@ -31,7 +31,8 @@ async def info(msg: Message):
 async def transfer(msg: Message, url: str, money2transfer: str):
     try:
         screen_name = link_handler(url)
-        from_screen_name = (await bp.api.users.get(user_ids=msg.from_id, fields=["screen_name"]))[0].screen_name
+        transfer_user = await bp.api.users.get(user_ids=msg.from_id, fields=["screen_name"])
+        from_screen_name = transfer_user[0].screen_name
         if not screen_name:
             await msg.answer(f'Не верно указана ссылка/упоминание'
                              f'\n\n'
@@ -47,8 +48,21 @@ async def transfer(msg: Message, url: str, money2transfer: str):
                              f'передать @{from_screen_name} 1к\n'
                              )
             return
-        who2pass = (await bp.api.users.get(screen_name=screen_name))[0].id
-        user2pass = await get_user(id=who2pass)
+        who2pass = await bp.api.users.get(screen_name=screen_name)
+        if not who2pass:
+            who2pass = await bp.api.users.get(user_ids=[transfer_user[0].id])
+        user2pass = await get_user(who2pass)
         user = await get_user(msg.from_id)
+        if user2pass:
+            if user.money >= money2transfer:
+                await update_user(id=msg.from_id,
+                                  money=user.money - money2transfer)
+                await update_user(id=msg.from_id,
+                                  money=user2pass.money + money2transfer)
+                await msg.answer('Перевод совершён')
+            else:
+                await msg.answer('У вас не достаточно денег для перевода')
+        else:
+            await msg.answer('У пользователя, которому вы хотите отправить деньги нет аккаунта в боте')
     except IntegrityError:
         await msg.answer('Сначала зарегистрируйтесь, напишите "Начать"')
