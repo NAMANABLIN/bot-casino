@@ -40,7 +40,8 @@ async def transfer(msg: Message, url: str, money2transfer: str):
                              f'перевести @{from_screen_name} 1000\n'
                              f'передать @{from_screen_name} 1к\n')
             return
-        money2transfer = reformat_money(money2transfer)
+        user = await get_user(msg.from_id)
+        money2transfer = reformat_money(money2transfer, user.money)
         if not money2transfer:
             await msg.answer(f'Не верная сумма перевода'
                              f'\n\n'
@@ -52,7 +53,6 @@ async def transfer(msg: Message, url: str, money2transfer: str):
         if not who2pass:
             who2pass = await bp.api.users.get(user_ids=[transfer_user[0].id])
         user2pass = await get_user(who2pass)
-        user = await get_user(msg.from_id)
         if user2pass:
             if user.money >= money2transfer:
                 await update_user(id=msg.from_id,

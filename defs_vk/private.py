@@ -4,7 +4,6 @@ from data.defs_orm import get_user, update_user
 from sqlalchemy.exc import IntegrityError
 
 from config import all_promo_codes
-from random import randint
 
 bp = Blueprint("For private commands")
 bp.on.vbml_ignore_case = True

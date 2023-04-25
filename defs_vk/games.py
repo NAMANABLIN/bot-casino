@@ -4,7 +4,7 @@ from data.defs_orm import get_user, update_user
 from sqlalchemy.exc import IntegrityError
 
 from config import even_bets, odd_bets, \
-    zero_bets, all_bets
+    zero_bets, all_bets, images
 from helper_funcs import reformat_money
 from random import randint
 
@@ -15,12 +15,13 @@ bp.on.vbml_ignore_case = True
 @bp.on.message(text='Рулетка <bet> <value_of_bet>')
 async def roulette(msg: Message, bet: str, value_of_bet: str):
     try:
-        value_of_bet = reformat_money(value_of_bet)
+        user = await get_user(msg.peer_id)
+
+        value_of_bet = reformat_money(value_of_bet, user.money)
         if not value_of_bet:
             await msg.answer('Не верная сумма ставки')
             return
 
-        user = await get_user(msg.peer_id)
         num_rolled = randint(0, 36)
         win_or_lose = False
         if value_of_bet > user.money:
@@ -69,15 +70,13 @@ async def roulette(msg: Message, bet: str, value_of_bet: str):
             await update_user(msg.peer_id, money=user.money + new_money)
             await msg.answer(f'Выпало число {num_rolled}\n\n'
                              f'Вы выиграли: {new_money}\n'
-                             f'У вас на счету: {user.money}')
+                             f'У вас на счету: {user.money}', attachment=images['win'][num_rolled])
         else:
             await update_user(msg.peer_id, money=user.money - value_of_bet)
             await msg.answer(
                 f'Выпало число {num_rolled}\n\n'
                 f'Вы проиграли {value_of_bet}\n'
-                f'У вас на счету: {user.money}')
+                f'У вас на счету: {user.money}', attachment=images['lose'][num_rolled])
     except IntegrityError:
         await msg.answer('Сначала зарегистрируйтесь, напишите "Начать"')
 
-
-#TODO: Кости

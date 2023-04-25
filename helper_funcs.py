@@ -1,4 +1,6 @@
-def reformat_money(value: str) -> int:
+def reformat_money(value: str, full_money:int) -> int:
+    if value in ['всё', 'все']:
+        return full_money
     try:
         value = int(value)
         return value
