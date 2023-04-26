@@ -2,7 +2,6 @@ import asyncio
 
 from data.database import async_db_session
 from data.models import User
-from sqlalchemy import exc
 
 
 async def init_app():
@@ -12,21 +11,18 @@ async def init_app():
 async def create_user(id, **kwargs):
     await User.create(id=id, **kwargs)
     user = await User.get(id)
-    return user.id
+    return user
 
 
 async def update_user(id, **kwargs):
-    await User.update(id,**kwargs)
+    await User.update(id=id, **kwargs)
     user = await User.get(id)
-    return user.id
+    return user
 
 
 async def get_user(id=None):
-    try:
-        info = await User.get(id)
-        return info
-    except exc.NoResultFound:
-        return False
+    user = await User.get(id)
+    return user
 
 
 loop = asyncio.get_event_loop()

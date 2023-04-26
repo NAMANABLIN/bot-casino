@@ -1,4 +1,6 @@
-def reformat_money(value: str, full_money:int) -> int:
+# здесь будут все функции которые помогают улучшить работу скриптов
+
+def reformat_money(value: str, full_money: int) -> int:
     if value in ['всё', 'все']:
         return full_money
     try:

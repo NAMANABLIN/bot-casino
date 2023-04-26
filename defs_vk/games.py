@@ -15,9 +15,10 @@ bp.on.vbml_ignore_case = True# чтобы игнорировался регис�
 @bp.on.message(text='Рулетка <bet> <value_of_bet>')
 async def roulette(msg: Message, bet: str, value_of_bet: str):
     try:
-        user = await get_user(msg.peer_id)
+        user = await get_user(msg.from_id)
         if user.iswork:
             await msg.answer('Ты на работе, не отвлекайся')
+            return
         value_of_bet = reformat_money(value_of_bet, user.money)
         if not value_of_bet:
             await msg.answer('Не верная сумма ставки')
@@ -68,12 +69,12 @@ async def roulette(msg: Message, bet: str, value_of_bet: str):
                     new_money = value_of_bet * 2
                     win_or_lose = True
         if win_or_lose:
-            await update_user(msg.peer_id, money=user.money + new_money)
+            await update_user(msg.from_id, money=user.money + new_money)
             await msg.answer(f'Выпало число {num_rolled}\n\n'
                              f'Вы выиграли: {new_money}\n'
                              f'У вас на счету: {user.money}', attachment=images['win'][num_rolled])
         else:
-            await update_user(msg.peer_id, money=user.money - value_of_bet)
+            await update_user(msg.from_id, money=user.money - value_of_bet)
             await msg.answer(
                 f'Выпало число {num_rolled}\n\n'
                 f'Вы проиграли {value_of_bet}\n'

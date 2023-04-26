@@ -50,7 +50,7 @@ class User(Base, ModelAdmin):
             f"nickname={self.nickname}, "
             f"money={self.money}, "
             f"promocodes = {self.promocodes}, "
-            f"sex={self.sex}"
+            f"sex={self.sex}, "
             f"iswork={self.iswork}"
             f")>"
         )
