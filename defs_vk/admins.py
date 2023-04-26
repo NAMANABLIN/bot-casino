@@ -15,7 +15,7 @@ async def promo_code_add(msg: Message, name_of_promo_code: str, amount_of_money:
             await msg.answer('Такой промокод уже существует')
         except KeyError:
             all_promo_codes[name_of_promo_code.upper()] = amount_of_money
-            dump(all_promo_codes, open(f'{path}\\promocodes.json', 'w'), indent=2)
+            dump(all_promo_codes, open(f'{path}/promocodes.json', 'w'), indent=2)
             await msg.answer('Промокод добавлен')
 
 

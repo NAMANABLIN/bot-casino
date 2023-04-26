@@ -17,7 +17,7 @@ zero_bets = ['зеро', 'ноль', 'zero']
 all_bets = even_bets + odd_bets + zero_bets
 
 path = getcwd()
-all_promo_codes = load(open(path + '\\' + 'promocodes.json', 'rb'))
+all_promo_codes = load(open(path + '/' + 'promocodes.json', 'rb'))
 images = {
     'win': {0: 'photo221158750_457273376_e2ac38381a9fec1f0f', 1: 'photo221158750_457273377_e2253d296d9097713d',
             2: 'photo221158750_457273378_baa934af3234d2343d', 3: 'photo221158750_457273379_34e3f0472c152ab044',
