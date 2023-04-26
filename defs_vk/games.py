@@ -1,7 +1,7 @@
 from vkbottle.bot import Blueprint, Message
 from data.defs_orm import get_user, update_user
 
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import NoResultFound
 
 from config import even_bets, odd_bets, \
     zero_bets, all_bets, images
@@ -9,14 +9,15 @@ from helper_funcs import reformat_money
 from random import randint
 
 bp = Blueprint("For games commands")
-bp.on.vbml_ignore_case = True
+bp.on.vbml_ignore_case = True# чтобы игнорировался регистр букв
 
 
 @bp.on.message(text='Рулетка <bet> <value_of_bet>')
 async def roulette(msg: Message, bet: str, value_of_bet: str):
     try:
         user = await get_user(msg.peer_id)
-
+        if user.iswork:
+            await msg.answer('Ты на работе, не отвлекайся')
         value_of_bet = reformat_money(value_of_bet, user.money)
         if not value_of_bet:
             await msg.answer('Не верная сумма ставки')
@@ -77,6 +78,5 @@ async def roulette(msg: Message, bet: str, value_of_bet: str):
                 f'Выпало число {num_rolled}\n\n'
                 f'Вы проиграли {value_of_bet}\n'
                 f'У вас на счету: {user.money}', attachment=images['lose'][num_rolled])
-    except IntegrityError:
+    except NoResultFound:
         await msg.answer('Сначала зарегистрируйтесь, напишите "Начать"')
-
