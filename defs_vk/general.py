@@ -1,13 +1,13 @@
 from vkbottle.bot import Blueprint, Message
 from data.defs_orm import get_user, update_user
 
-from helper_funcs import reformat_money, link_handler
+from helper_funcs import reformat_money, mention_handler
 from sqlalchemy.exc import NoResultFound
 
-from config import admin_IDs
+from config import NO_ACCOUNT, HELP
 
-bp = Blueprint("For games commands")
-bp.on.vbml_ignore_case = True  # чтобы игнорировался регистр букв
+bp = Blueprint("For general commands")
+bp.on.vbml_ignore_case = True
 
 
 @bp.on.message(text='Я')
@@ -17,27 +17,19 @@ async def info(msg: Message):
         await msg.answer(f'Приветствую, {user.nickname}!\n'
                          f'На счету у тебя: {user.money}')
     except NoResultFound:
-        await msg.answer('Сначала зарегистрируйтесь, напишите "Начать" в личных сообщения бота')
+        await msg.answer(NO_ACCOUNT)
 
 
 @bp.on.message(text='Помощь')
 async def show_help(msg: Message):
-    await msg.answer('В личных сообщениях бота:\n'
-                     'Если у вас нет аккаунта, введите "Начать"\n'
-                     'Чтобы ввести промокод, введите "Промокод <сам промокод>"\n'
-                     'Чтобы работать, введите "Работа", деньги получите через 5 минут\n\n'
-                     'В чате и в личных сообщения бота:\n'
-                     'Перевести другому пользователю - "Перевести <кому(подходит ссылка или упоминание в чате)> <сколько>"\n'
-                     'Сыграть в рулетку, после прописание команды, выпадает число от 0 до 36. Можно ставить на чётность(x2), нечётность(x2) числа, или само число(x36) '
-                     'если вы выигрывайте, то получаете умноженную ставку, если проигрываете, то у вас эти деньги забираются ')
+    await msg.answer(HELP)
 
 
-@bp.on.message(text=['Перевести <url> <money2transfer>',
-                     'Передать <url> <money2transfer>'])
-async def transfer(msg: Message, url: str, money2transfer: str):
+@bp.on.message(text=['Перевести <mention> <money2transfer>',
+                     'Передать <mention> <money2transfer>'])
+async def transfer(msg: Message, mention: str, money2transfer: str):
     try:
-
-        who2screen_name = link_handler(url)
+        who2screen_name = mention_handler(mention)
         if not who2screen_name:
             from_screen_name = (await bp.api.users.get(
                 user_ids=msg.from_id,
@@ -87,4 +79,4 @@ async def transfer(msg: Message, url: str, money2transfer: str):
         else:
             await msg.answer('У пользователя, которому вы хотите отправить деньги нет аккаунта в боте')
     except NoResultFound:
-        await msg.answer('Сначала зарегистрируйтесь, напишите "Начать"')
+        await msg.answer(NO_ACCOUNT)

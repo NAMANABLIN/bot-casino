@@ -10,7 +10,7 @@ from random import randint
 from asyncio import sleep
 
 bp = Blueprint("For private commands")
-bp.on.vbml_ignore_case = True# чтобы игнорировался регистр букв
+bp.on.vbml_ignore_case = True  # чтобы игнорировался регистр букв
 
 
 @bp.on.private_message(text='Промокод <name_of_promo_code>')
@@ -39,13 +39,13 @@ async def work_handler(msg: Message):
     try:
         user = await get_user(msg.from_id)
         if user.iswork:
-            await msg.answer('Вы уже работаете, зарплата будет четь позже')
+            await msg.answer('Вы уже работаете, зарплата будет чуть позже')
         else:
             random_salary = randint(1, 10) * 1000
             await update_user(id=msg.from_id, iswork=True)
             await msg.answer(f'Нужно будет перетаскать ящики из грузовика, после получишь {random_salary}')
             await sleep(5 * 60)
-            await msg.answer(f'Перетащил, значит вот {random_salary}, всё честно!')
+            await msg.answer(f'Перетащил, значит вот {random_salary}, держи. Всё честно!')
             await update_user(id=msg.from_id, money=user.money + random_salary, iswork=False)
     except NoResultFound:
         await msg.answer('Сначала зарегистрируйтесь, напишите "Начать"')

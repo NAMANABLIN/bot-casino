@@ -18,10 +18,10 @@ def reformat_money(value: str, full_money: int) -> int:
         return int(''.join(value))
 
 
-def link_handler(url: str):
-    if '/' in url:
-        return url[url.rfind('/'):]
-    elif '|' in url:
-        return url[1:url.find('|')]
+def mention_handler(mention: str):
+    if '/' in mention:  # определяет упоминание пользователя ссылка ли
+        return mention[mention.rfind('/') + 1:]
+    elif '|' in mention:  # определяет упоминание пользователя упоминание в чате ли
+        return mention[1:mention.find('|')]
     else:
         return False

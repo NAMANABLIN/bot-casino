@@ -4,12 +4,12 @@ from data.defs_orm import get_user, update_user
 from sqlalchemy.exc import NoResultFound
 
 from config import even_bets, odd_bets, \
-    zero_bets, all_bets, images
+    zero_bets, all_bets, images, NO_ACCOUNT, WRONG_BET
 from helper_funcs import reformat_money
 from random import randint
 
 bp = Blueprint("For games commands")
-bp.on.vbml_ignore_case = True# чтобы игнорировался регистр букв
+bp.on.vbml_ignore_case = True
 
 
 @bp.on.message(text='Рулетка <bet> <value_of_bet>')
@@ -19,55 +19,40 @@ async def roulette(msg: Message, bet: str, value_of_bet: str):
         if user.iswork:
             await msg.answer('Ты на работе, не отвлекайся')
             return
+
         value_of_bet = reformat_money(value_of_bet, user.money)
-        if not value_of_bet:
+        if value_of_bet <= 0:
             await msg.answer('Не верная сумма ставки')
             return
 
         num_rolled = randint(0, 36)
-        win_or_lose = False
+        win_or_lose = False  # если равен True, то игрок победил
         if value_of_bet > user.money:
             await msg.answer('У вас не достаточно средств')
             return
-        try:
+        try:  # если ставка число, то выполняется этот блок кода
             bet = int(bet)
-            if num_rolled not in range(0, 37):
-                await msg.answer(f'Такой ставки не существует\n'
-                                 f'Чтобы поставить на чётное число вы должны прописать (x2):\n'
-                                 f'{(", ".join(even_bets)).capitalize()}\n\n'
-                                 f'На нечетное (x2):\n'
-                                 f'{(", ".join(odd_bets)).capitalize()}\n\n'
-                                 f'Так же вы можеть поставить на число (x32):\n'
-                                 f'От 0 до 36, писать нужно цифрами, но так же можно написать "зеро"')
+            if bet not in range(0, 37):
+                await msg.answer(WRONG_BET)
                 return
             elif num_rolled == bet:
                 new_money = bet * 36
                 win_or_lose = True
 
-        except ValueError:
+        except ValueError:  # если ставка не число, то выполняется этот блок кода
             bet = bet.lower()
             if bet not in all_bets:
-                await msg.answer(f'Такой ставки не существует\n'
-                                 f'Чтобы поставить на чётное число вы должны прописать (x2):\n'
-                                 f'{(", ".join(even_bets)).capitalize()}\n\n'
-                                 f'На нечетное (x2):\n'
-                                 f'{(", ".join(odd_bets)).capitalize()}\n\n'
-                                 f'Так же вы можеть поставить на число (x32):\n'
-                                 f'От 0 до 36, писать нужно цифрами, '
-                                 f'но при ставке на 0 так же можно написать: {(", ".join(odd_bets))}')
+                await msg.answer(WRONG_BET)
                 return
-            if num_rolled == 0:
-                if bet in zero_bets:
-                    new_money = bet * 36
-                    win_or_lose = True
-            elif bet in even_bets:
-                if num_rolled % 2 == 0:
-                    new_money = value_of_bet * 2
-                    win_or_lose = True
-            elif bet in odd_bets:
-                if num_rolled % 2 != 0:
-                    new_money = value_of_bet * 2
-                    win_or_lose = True
+            if bet in zero_bets and num_rolled == 0:
+                new_money = bet * 36
+                win_or_lose = True
+            elif bet in even_bets and num_rolled % 2 == 0:
+                new_money = value_of_bet * 2
+                win_or_lose = True
+            elif bet in odd_bets and num_rolled % 2 != 0:
+                new_money = value_of_bet * 2
+                win_or_lose = True
         if win_or_lose:
             await update_user(msg.from_id, money=user.money + new_money)
             await msg.answer(f'Выпало число {num_rolled}\n\n'
@@ -80,4 +65,4 @@ async def roulette(msg: Message, bet: str, value_of_bet: str):
                 f'Вы проиграли {value_of_bet}\n'
                 f'У вас на счету: {user.money}', attachment=images['lose'][num_rolled])
     except NoResultFound:
-        await msg.answer('Сначала зарегистрируйтесь, напишите "Начать"')
+        await msg.answer(NO_ACCOUNT)
