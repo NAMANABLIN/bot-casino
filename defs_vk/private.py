@@ -10,7 +10,7 @@ from random import randint
 from asyncio import sleep
 
 bp = Blueprint("For private commands")
-bp.on.vbml_ignore_case = True  # чтобы игнорировался регистр букв
+bp.on.vbml_ignore_case = True
 
 
 @bp.on.private_message(text='Промокод <name_of_promo_code>')

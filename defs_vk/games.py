@@ -30,7 +30,7 @@ async def roulette(msg: Message, bet: str, value_of_bet: str):
         if value_of_bet > user.money:
             await msg.answer('У вас не достаточно средств')
             return
-        try:  # если ставка число, то выполняется этот блок кода
+        try:  # если ставка - число, то выполняется этот блок кода
             bet = int(bet)
             if bet not in range(0, 37):
                 await msg.answer(WRONG_BET)
@@ -39,7 +39,7 @@ async def roulette(msg: Message, bet: str, value_of_bet: str):
                 new_money = bet * 36
                 win_or_lose = True
 
-        except ValueError:  # если ставка не число, то выполняется этот блок кода
+        except ValueError:  # если ставка - не число, то выполняется этот блок кода
             bet = bet.lower()
             if bet not in all_bets:
                 await msg.answer(WRONG_BET)
