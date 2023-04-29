@@ -2,10 +2,13 @@ import asyncio
 
 from data.database import async_db_session
 from data.models import User
+from os import path
 
 
 async def init_app():
     await async_db_session.init()
+    if not path.exists('users.sqlite'):
+        await async_db_session.create_all()
 
 
 async def create_user(id, **kwargs):

@@ -1,6 +1,6 @@
 from vkbottle.bot import Blueprint, Message
 
-from data.defs_orm import create_user, get_user, update_user
+from data.defs_orm import create_user, get_user
 
 from sqlalchemy.exc import NoResultFound
 from keyboards import keyb_reg
@@ -8,7 +8,7 @@ from states import ctx, RegState
 from config import sex2bool
 
 bp = Blueprint("Registration")
-bp.on.vbml_ignore_case = True # чтобы игнорировался регистр букв
+bp.on.vbml_ignore_case = True  # чтобы игнорировался регистр букв
 
 
 @bp.on.private_message(text="Начать")
